@@ -20,6 +20,8 @@ fn main() {
 
     println('## 原始字符串')
     raw_str()
+
+    // 常用字符串内置函数，可以参考后面的标准库章节，也可以直接参考 vlib/builtin/string.v 源代码。
 }
 
 
