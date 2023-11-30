@@ -1,5 +1,5 @@
 module main
 
 fn main() {
-	
+    
 }
