@@ -130,6 +130,99 @@ fn split_elems_in_arr() {
 访问数组的错误处理
 当访问数组成员的索引越界或者别的错误，可以使用or代码块来进行错误处理。
 */
+fn error_handle_in_arr() {
+	println('访问数组的错误处理')
+
+	arr := [1, 2, 3]
+	large_index := 999
+	// var1:=arr[large_index] //直接报数组越界错误
+
+	y := arr[large_index] or { 100 } //如果数组元素不存在,执行or代码块,可以返回默认值
+	println(y)
+
+	// 增加or代码块后,进行错误的处理
+	x := arr[large_index] or { panic('out of bounds') }
+	println(x)
+
+	myfn() or { panic('myfn error') } //处理myfn向上抛的错误
+}
+
+fn myfn() ! {
+	arr := [1, 2, 3]
+	large_index := 999
+	x := arr[large_index]! //也可以本层级不处理,向上抛错误
+	println(x)
+}
+
+/*if语句判断数组成员是否存在*/
+fn if_check_index() {
+	println('if语句判断数组成员是否存在')
+	mut a := [12.5, 6.5, -17.25]
+	mut res := []f64{cap:2}
+
+	for i in [1, 4] {
+		// 检查数组a[i]是否存在,如果存在,则赋值,if条件返回true,如果不存在,则返回false
+		if x := a[i] { 
+			res << x
+		} else {
+			res << -23.0
+		}
+	}
+
+	println(res)  //返回 [6.5, -23.0]
+}
+
+/*数组解构赋值
+目前数组的解构赋值只能用在传递给不确定参数函数，不像js中那样灵活。*/
+
+fn expand_to_variadic() {
+	println('数组解构赋值')
+	a := ['a', 'b', 'c']
+	println(variadic_fn_b(...a)) //数组解构赋值后,传递给不确定参数数组
+}
+fn variadic_fn_b(a ...string) string {
+	a0 := a[0]
+	a1 := a[1]
+	a2 := a[2]
+	return '$a0,$a1,$a2'
+}
+
+/*
+数组排序
+V语言提供了一个内置的数组排序语法，不仅可以对基本类型数组进行排序，也可以对结构体类型数组进行排序。
+
+数组内置函数
+filter( )，map( )，any( )，all( )这四个内置函数都是在编译器内部实现的，比较特殊，
+具体用法参考。
+*/
+struct User {
+	age  int
+	name string
+}
+
+fn array_sort_case() {
+	println('数组排序')
+	//基本类型数组
+	mut numbers := [1, 3, 2]
+	numbers.sort() // 1, 2, 3,默认升序,即 a < b,小于号表示从小到大
+	println(numbers)
+	numbers.sort(a > b) // 3, 2, 1,降序排序,即 a > b,大于号表示从大到小
+	// numbers.sort(aa > bb) // 只能用a和b这两个变量名,其他变量名会编译不通过
+	println(numbers)
+	
+	println('- 结构体类型数组')
+	// 结构体类型数组
+	mut users := [
+		User{21, 'Bob'},
+	 	User{20, 'Zarkon'},
+		User{25, 'Alice'},
+	]
+
+	users.sort(a.age < b.age) //用结构体的某个字段进行排序
+	println(users)
+	users.sort(a.name < b.name) //字符串类型也可以排序
+	println(users)
+}
 
 fn main() {
 	simple_case01()
@@ -143,4 +236,10 @@ fn main() {
 	check_elem_exists()
 
 	split_elems_in_arr()
+	if_check_index()
+	expand_to_variadic()
+	array_sort_case()
+
+
+	error_handle_in_arr()
 }
